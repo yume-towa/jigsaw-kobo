@@ -1,0 +1,13 @@
+{
+  "name": "jigsaw-kobo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "手持ちの写真でジグソーパズルが作れるブラウザゲーム",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@babel/core": "7.25.2",
+    "@babel/preset-react": "7.24.7"
+  }
+}
