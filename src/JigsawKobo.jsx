@@ -12,17 +12,31 @@ function edgeTo(ctx, ax, ay, bx, by, e) {
   // P(t, o): 辺に沿って t、法線方向へ o(辺の長さ比)
   const P = (t, o) => [ax + dx * t - dy * e.tab * o, ay + dy * t + dx * e.tab * o];
   if (e.kind === "wave") {
-    // なめらかな波(k = 波の周期数)。半周期ごとにふくらみを交互に描く
+    // なめらかな波(k = 波の周期数)。半周期ごとにふくらみを交互に描く。
+    // 両端の半周期は、角を辺に沿って(接線方向に)出発させる。角から斜めに
+    // 出ると、同じ角から出る直交した辺の波と交差して細い重なりができるため。
+    // 端の内側の制御点は、隣の半周期の制御点と一直線上で END 倍に伸ばして
+    // つなぎ目のなめらかさを保ち、ふくらみの高さも中の半周期と揃える
     const seg = 2 * e.k;
+    const END = 1.6;
     let d = 1;
     for (let i = 0; i < seg; i++) {
       const a = i / seg;
       const b = (i + 1) / seg;
-      ctx.bezierCurveTo(
-        ...P(a + (b - a) * 0.3, d * e.amp),
-        ...P(a + (b - a) * 0.7, d * e.amp),
-        ...P(b, 0)
-      );
+      const h = b - a;
+      const c1 =
+        i === 0
+          ? P(a + h * 0.3, 0)
+          : i === seg - 1
+            ? P(a + h * 0.3 * END, d * e.amp * END)
+            : P(a + h * 0.3, d * e.amp);
+      const c2 =
+        i === seg - 1
+          ? P(b - h * 0.3, 0)
+          : i === 0
+            ? P(b - h * 0.3 * END, d * e.amp * END)
+            : P(b - h * 0.3, d * e.amp);
+      ctx.bezierCurveTo(...c1, ...c2, ...P(b, 0));
       d = -d;
     }
     return;
@@ -1459,6 +1473,10 @@ export default function JigsawKobo() {
               borderRadius: 4,
               backgroundImage: showGhost ? `url(${imgSrc})` : "none",
               backgroundSize: "cover",
+              // 絵を枠線の下に描かない。描くと繰り返された絵の反対側の端が、
+              // 点線のすき間からはみ出して見えてしまう
+              backgroundRepeat: "no-repeat",
+              backgroundClip: "padding-box",
               opacity: 1,
               boxShadow: "inset 0 0 30px rgba(0,0,0,0.35)",
             }}
