@@ -662,9 +662,13 @@
       const allVisible = pieces.every(p => p.x >= -nw * 0.45 && p.y >= -nh * 0.45 && p.x + nw <= aw + nw * 0.45 && p.y + nh <= ah + nh * 0.45);
       if (boardSame && allVisible) return;
       setPieces(ps => {
+        // ドラッグ中のピースは指(マウス)の下に残し、割り当て直しから外す。
+        // 外さないと、操作中に盤面が変わったとき、つかんでいるピースだけが
+        // 置き場へ飛ばされてしまう
+        const dragId = dragRef.current ? dragRef.current.id : -1;
         // まだ置けていないピースを、新しい置き場に均等に割り当て直す。
         // 画面上の並び順で対応づけて、見た目の位置関係を保つ
-        const free = ps.filter(p => !p.locked).sort((a, b) => a.y - b.y || a.x - b.x);
+        const free = ps.filter(p => !p.locked && p.id !== dragId).sort((a, b) => a.y - b.y || a.x - b.x);
         const open = [...plan.slots].sort((a, b) => a.y - b.y || a.x - b.x);
         const at = new Map();
         free.forEach((p, i) => {
@@ -684,6 +688,13 @@
             ty,
             x: tx,
             y: ty
+          };
+          if (p.id === dragId) return {
+            ...p,
+            w: nw,
+            h: nh,
+            tx,
+            ty
           };
           const s = at.get(p.id);
           // 置き場が取れない場合だけ、画面内に収まるよう現在位置を丸める
@@ -1175,6 +1186,10 @@
     const lockedCount = pieces.filter(p => p.locked).length;
 
     // ===== スタイル =====
+    // 行の高さ(LH)は数値で固定する。normal のままだとフォントごとに高さが変わり、
+    // Webフォントが遅れて届いたときにヘッダーと設定バーの高さが数px変わって、
+    // プレイエリアが縮み、作ったばかりの盤面とピースが並べ直されてしまう
+    const LH = 1.4;
     const S = {
       root: {
         fontFamily: "'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', sans-serif",
@@ -1196,6 +1211,7 @@
       title: {
         fontWeight: 900,
         fontSize: 18,
+        lineHeight: LH,
         letterSpacing: 2,
         marginRight: "auto"
       },
@@ -1206,6 +1222,7 @@
         borderRadius: 999,
         padding: "5px 13px",
         fontSize: 13,
+        lineHeight: LH,
         fontWeight: 700,
         cursor: "pointer",
         fontFamily: "inherit",
@@ -1223,6 +1240,7 @@
       },
       stat: {
         fontSize: 13,
+        lineHeight: LH,
         opacity: 0.85,
         fontVariantNumeric: "tabular-nums"
       },
@@ -1283,7 +1301,11 @@
       style: {
         ...S.btn(false),
         background: "#1a2a24",
-        cursor: "pointer"
+        cursor: "pointer",
+        // select は line-height が効かないので、中身の高さを行の高さに
+        // 合わせて直接指定する(余白と枠線はボタンと同じ計算で外側に付く)
+        boxSizing: "content-box",
+        height: `${LH}em`
       }
     }, SHAPE_OPTIONS.map(([v, label]) => /*#__PURE__*/React.createElement("option", {
       key: v,
