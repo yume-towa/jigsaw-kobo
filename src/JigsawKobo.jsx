@@ -1460,13 +1460,15 @@ export default function JigsawKobo() {
         )}
 
 
-        {/* 完成位置(下絵) */}
+        {/* 完成位置(下絵)。枠線は絵の外側に引く。left/top を枠線の太さ(2px)
+            だけ戻さないと、下絵がピースの絵より右下にずれ、枠線も
+            左上はピースに隠れて右下だけ離れて見えてしまう */}
         {img && board && (
           <div
             style={{
               position: "absolute",
-              left: board.x,
-              top: board.y,
+              left: board.x - 2,
+              top: board.y - 2,
               width: board.w,
               height: board.h,
               border: "2px dashed rgba(242,234,217,0.45)",

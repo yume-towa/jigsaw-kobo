@@ -1587,8 +1587,8 @@
     }, "キャンセル"))), img && board && /*#__PURE__*/React.createElement("div", {
       style: {
         position: "absolute",
-        left: board.x,
-        top: board.y,
+        left: board.x - 2,
+        top: board.y - 2,
         width: board.w,
         height: board.h,
         border: "2px dashed rgba(242,234,217,0.45)",
