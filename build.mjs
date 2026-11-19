@@ -36,6 +36,9 @@ const { code: out } = transformSync(wrapped, {
   filename: SRC,
   compact: false,
   comments: true,
+  // 日本語の文字列を \uXXXX にせず、そのまま出力する
+  // (Babel の版によって出力が変わり、app.js 全体に差分が出るのを防ぐ)
+  generatorOpts: { jsescOption: { minimal: true } },
 });
 
 writeFileSync(OUT, out);

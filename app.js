@@ -927,10 +927,16 @@
         box.removeEventListener("touchmove", onMove);
         box.removeEventListener("touchend", onEnd);
         box.removeEventListener("touchcancel", onEnd);
-        // 指を置いたままモーダルを閉じるとtouchendが来ないため、ここで必ず解除する
-        touchCropRef.current = null;
+        // ここで touchCropRef を解除してはいけない。この effect は zoom/pan が
+        // 変わるたびに付け直されるので、解除するとピンチやドラッグが最初の
+        // 1回の動きで止まってしまう。解除はモーダルを閉じたときだけ(下の effect)
       };
     }, [cropOpen, zoom, pan, frame]);
+
+    // 指を置いたままモーダルを閉じるとtouchendが来ないため、閉じたら必ず解除する
+    useEffect(() => {
+      if (!cropOpen) touchCropRef.current = null;
+    }, [cropOpen]);
 
     // 切り出し中に画面が回転・リサイズされたら枠も作り直す
     useEffect(() => {
