@@ -1100,6 +1100,18 @@ export default function JigsawKobo() {
       borderBottom: "2px solid #3d5a4c",
     },
     title: { fontWeight: 900, fontSize: 18, lineHeight: LH, letterSpacing: 2, marginRight: "auto" },
+    // 作品一覧(TOPページ)に戻るボタン。見た目は設定ボタンと揃える
+    back: {
+      border: "1.5px solid #3d5a4c",
+      borderRadius: 999,
+      padding: "5px 12px",
+      fontSize: 13,
+      lineHeight: LH,
+      fontWeight: 700,
+      color: "#f2ead9",
+      textDecoration: "none",
+      whiteSpace: "nowrap",
+    },
     btn: (active) => ({
       border: "1.5px solid " + (active ? "#f0a05a" : "#3d5a4c"),
       background: active ? "#f0a05a" : "transparent",
@@ -1144,6 +1156,8 @@ export default function JigsawKobo() {
         .jk-area { overscroll-behavior: none; -webkit-user-select: none; }
         .jk-piece { -webkit-touch-callout: none; }
         button:hover { filter: brightness(1.1); }
+        .jk-back:hover { border-color: #f0a05a !important; }
+        .jk-back:focus-visible { outline: 2px solid #f0a05a; outline-offset: 2px; }
         @keyframes pop { 0%{transform:scale(1.12)} 100%{transform:scale(1)} }
         @keyframes jkGlow {
           0%   { box-shadow: 0 0 0 0 rgba(255,209,102,0); }
@@ -1157,6 +1171,9 @@ export default function JigsawKobo() {
       `}</style>
 
       <div style={S.header}>
+        <a className="jk-back" href="https://yume-towa.github.io/" style={S.back}>
+          ← 一覧に戻る
+        </a>
         <div style={S.title}>🧩 ジグソー工房</div>
         {img && (
           <>
