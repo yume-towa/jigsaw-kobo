@@ -1172,7 +1172,7 @@ export default function JigsawKobo() {
 
       <div style={S.header}>
         <a className="jk-back" href="https://yume-towa.github.io/" style={S.back}>
-          ← 一覧に戻る
+          一覧に戻る
         </a>
         <div style={S.title}>🧩 ジグソー工房</div>
         {img && (

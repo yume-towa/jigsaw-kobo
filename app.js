@@ -1292,7 +1292,7 @@
       className: "jk-back",
       href: "https://yume-towa.github.io/",
       style: S.back
-    }, "← 一覧に戻る"), /*#__PURE__*/React.createElement("div", {
+    }, "一覧に戻る"), /*#__PURE__*/React.createElement("div", {
       style: S.title
     }, "🧩 ジグソー工房"), img && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
       style: S.stat
